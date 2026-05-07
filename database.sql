@@ -1,0 +1,57 @@
+-- Forma-1 adatbázis táblák
+CREATE TABLE IF NOT EXISTS gp (
+  datum DATE PRIMARY KEY,
+  nev VARCHAR(100),
+  helyszin VARCHAR(100)
+);
+
+CREATE TABLE IF NOT EXISTS pilota (
+  az INT AUTO_INCREMENT PRIMARY KEY,
+  nev VARCHAR(100) NOT NULL,
+  nem CHAR(1) DEFAULT 'F',
+  szuldat DATE,
+  nemzet VARCHAR(80)
+);
+
+CREATE TABLE IF NOT EXISTS eredmeny (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  datum DATE,
+  pilotaaz INT,
+  helyezes INT,
+  hiba VARCHAR(100),
+  csapat VARCHAR(100),
+  tipus VARCHAR(100),
+  motor VARCHAR(100),
+  FOREIGN KEY (datum) REFERENCES gp(datum),
+  FOREIGN KEY (pilotaaz) REFERENCES pilota(az)
+);
+
+-- Saját táblák
+CREATE TABLE IF NOT EXISTS felhasznalo (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  vezeteknev VARCHAR(60) NOT NULL,
+  keresztnev VARCHAR(60) NOT NULL,
+  login VARCHAR(60) UNIQUE NOT NULL,
+  jelszo VARCHAR(255) NOT NULL,
+  letrehozva TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS uzenet (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nev VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  targy VARCHAR(200) NOT NULL,
+  uzenet TEXT NOT NULL,
+  kuldes_ideje TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  felh_id INT NULL,
+  FOREIGN KEY (felh_id) REFERENCES felhasznalo(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS kep (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fajlnev VARCHAR(255) NOT NULL,
+  cim VARCHAR(200),
+  feltolto_id INT NULL,
+  feltoltve TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (feltolto_id) REFERENCES felhasznalo(id) ON DELETE SET NULL
+);
